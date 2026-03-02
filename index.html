@@ -87,16 +87,3 @@
             // تحديث الواجهة
             scoreElement.innerText = score + "%";
             scoreElement.className = score > 50 ? "text-5xl font-black text-red-600" : "text-5xl font-black text-green-600";
-            statusElement.innerText = score > 50 ? "احتمالية تضليل عالية!" : "النص يبدو موضوعياً غالباً.";
-
-            list.innerHTML = "";
-            findings.forEach(f => {
-                list.innerHTML += `<li class="flex items-center text-slate-700 bg-slate-50 p-3 rounded-lg"> 🚩 ${f}</li>`;
-            });
-
-            detailBox.classList.remove('hidden');
-        }
-    </script>
-</body>
-
-</html>
