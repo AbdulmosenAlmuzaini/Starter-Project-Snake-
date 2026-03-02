@@ -22,68 +22,142 @@
 <body class="p-5 md:p-10">
 
     <div class="max-w-4xl mx-auto">
+        <!-- Settings / API Key -->
+        <div class="mb-6 text-right">
+            <button onclick="toggleSettings()" class="text-slate-400 hover:text-blue-600 text-sm transition flex items-center justify-end gap-1 ml-auto">
+                <span>?? ลฺฯวฯวส API</span>
+            </button>
+            <div id="settingsPanel" class="hidden mt-2 bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-right">
+                <label class="block text-sm font-bold mb-2 text-slate-600">ใÝสวอ Groq API:</label>
+                <div class="flex gap-2">
+                    <input type="password" id="apiKey" class="flex-1 p-2 border rounded-lg text-sm" placeholder="gsk_...">
+                    <button onclick="saveApiKey()" class="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-slate-700">อÝู</button>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">ํสใ อÝู วแใÝสวอ ใอแํว๐ Ýํ ใสีÝอ฿ ÝÞุ.</p>
+            </div>
+        </div>
+
         <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-slate-800 mb-2">๐” ู…ุญูู ุงููุตูุต ุงูู…ุถููุฉ</h1>
-            <p class="text-slate-600">ุงูุชุดู ุฃุณุงููุจ ุงูุชูุงุนุจ ุงููุบูู ูุงูุฏุนุงูุฉ ูู ุงููุตูุต</p>
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">?? ใอแแ วแไีๆี วแใึแแษ</h1>
+            <p class="text-slate-600">ว฿สิÝ รำวแํศ วแสแวฺศ วแแÛๆํ ๆวแฯฺวํษ วแใฯฺๆใ ศวแะ฿วม วแวีุไวฺํ</p>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
             <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
-                <label class="block text-lg font-bold mb-3 text-slate-700">ุฃุฏุฎู ุงููุต ุงูู…ุฑุงุฏ ุชุญูููู:</label>
+                <label class="block text-lg font-bold mb-3 text-slate-700">รฯฮแ วแไี วแใัวฯ สอแํแๅ:</label>
                 <textarea id="inputText" rows="8"
                     class="w-full p-4 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none resize-none"
-                    placeholder="ุงูุชุจ ุฃู ุงูุตู ุงููุต ููุง..."></textarea>
+                    placeholder="ว฿สศ รๆ วแีÞ วแไี ๅไว..."></textarea>
 
-                <button onclick="analyzeText()"
-                    class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200">
-                    ุจุฏุก ุงูุชุญููู ุงูููุฑู
+                <button id="analyzeBtn" onclick="analyzeText()"
+                    class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200 flex items-center justify-center gap-2">
+                    <span id="btnText">ศฯม วแสอแํแ วแะ฿ํ</span>
+                    <div id="loader" class="hidden animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
                 </button>
             </div>
 
-            <div
-                class="bg-white p-6 rounded-2xl shadow-lg text-center flex flex-col justify-center border-t-4 border-blue-500">
-                <h3 class="text-xl font-bold mb-2">ู…ุคุดุฑ ุงูุชุถููู</h3>
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center flex flex-col justify-center border-t-4 border-blue-500">
+                <h3 class="text-xl font-bold mb-2">ใฤิั วแสึแํแ</h3>
                 <div id="scoreCircle" class="text-5xl font-black text-slate-300">0%</div>
-                <p id="statusText" class="mt-4 text-slate-500 italic">ุจุงูุชุธุงุฑ ุงููุต...</p>
+                <p id="statusText" class="mt-4 text-slate-500 italic">ศวไสูวั วแไี...</p>
             </div>
-
         </div>
 
         <div id="resultsDetail" class="hidden mt-8 bg-white p-6 rounded-2xl shadow-lg border-r-8 border-yellow-400">
-            <h3 class="text-xl font-bold mb-4 text-slate-800 underline decoration-yellow-400">ุงูุชูููุงุช ุงูู…ูุชุดูุฉ:</h3>
-            <ul id="techList" class="space-y-3">
-            </ul>
+            <h3 class="text-xl font-bold mb-4 text-slate-800 underline decoration-yellow-400">วแสอแํแ วแสÝีํแํ:</h3>
+            <div id="aiAnalysis" class="text-slate-700 leading-relaxed space-y-4">
+                <!-- AI results here -->
+            </div>
         </div>
     </div>
 
     <script>
-        function analyzeText() {
+        // Load saved key
+        document.getElementById('apiKey').value = localStorage.getItem('groq_api_key') || '';
+
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKey').value;
+            localStorage.setItem('groq_api_key', key);
+            alert('สใ อÝู วแใÝสวอ ศไฬวอ');
+            toggleSettings();
+        }
+
+        async function analyzeText() {
             const text = document.getElementById('inputText').value;
+            const apiKey = localStorage.getItem('groq_api_key');
+            
+            if (!apiKey) {
+                alert("ํัฬ์ ลฯฮวแ ใÝสวอ Groq API รๆแว๐ ใไ วแลฺฯวฯวส ??");
+                toggleSettings();
+                return;
+            }
+
+            if (!text.trim()) return alert("วแัฬวม ลฯฮวแ ไี รๆแว๐");
+
+            // UI Loading State
+            const btn = document.getElementById('analyzeBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
             const scoreElement = document.getElementById('scoreCircle');
             const statusElement = document.getElementById('statusText');
             const detailBox = document.getElementById('resultsDetail');
-            const list = document.getElementById('techList');
+            const aiBox = document.getElementById('aiAnalysis');
 
-            if (!text.trim()) return alert("ุงูุฑุฌุงุก ุฅุฏุฎุงู ูุต ุฃููุงู");
+            btn.disabled = true;
+            btnText.innerText = "ฬวัํ วแสอแํแ ศวแะ฿วม วแวีุไวฺํ...";
+            loader.classList.remove('hidden');
 
-            // ู…ุญุงูุงุฉ ุจุณูุทุฉ ูู…ูุทู ุงูุชุญููู (Regex)
-            let score = 0;
-            let findings = [];
+            try {
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [
+                            {
+                                role: "system",
+                                content: `รไส ฮศํั Ýํ ฿ิÝ วแศัๆศวฬไฯว ๆวแสึแํแ วแลฺแวใํ. อแแ วแไี วแฺัศํ วแใÞฯใ ศฺใÞ. 
+                                ํฬศ รไ ํสึใไ ัฯ฿:
+                                1. ไำศษ ใฦๆํษ แแสึแํแ (0-100).
+                                2. ิัอ แแสÞไํวส วแใำสฮฯใษ (ใหแ: วแิํุไษก วแฺวุÝษ วแใÝัุษก รไีวÝ วแอÞวฦÞ).
+                                3. วแไสํฬษ วแไๅวฦํษ แแฬใๅๆั.
+                                วฬฺแ วแสไำํÞ ศีํÛษ JSON ฿วแสวแํ:
+                                {"score": 80, "status": "ไี ใสอํา ฬฯว๐", "reasoning": "ไี ุๆํแ ํิัอ วแรำศวศ..."}`
+                            },
+                            { role: "user", content: text }
+                        ],
+                        response_format: { type: "json_object" }
+                    })
+                });
 
-            if (text.includes("ู…ุคุงู…ุฑุฉ") || text.includes("ุฎูุงูุฉ")) {
-                score += 40;
-                findings.push("ุชุญููุฒ ุนุงุทูู: ุงุณุชุฎุฏุงู… ููู…ุงุช ู…ุดุญููุฉ.");
+                const data = await response.json();
+                const result = JSON.parse(data.choices[0].message.content);
+
+                // Update UI
+                scoreElement.innerText = result.score + "%";
+                scoreElement.className = result.score > 50 ? "text-5xl font-black text-red-600" : "text-5xl font-black text-green-600";
+                statusElement.innerText = result.status;
+                
+                aiBox.innerHTML = result.reasoning.replace(/\n/g, '<br>');
+                detailBox.classList.remove('hidden');
+
+            } catch (error) {
+                console.error(error);
+                alert("อฯห ฮุร รหไวม วแวสีวแ ศÜ Groq. สร฿ฯ ใไ ีอษ ใÝสวอ API.");
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = "ศฯม วแสอแํแ วแะ฿ํ";
+                loader.classList.add('hidden');
             }
-            if (text.includes("ูู") || text.includes("ุฏุงุฆู…ุงู") || text.includes("ุงูุฌู…ูุน")) {
-                score += 30;
-                findings.push("ุชุนู…ูู… ู…ูุฑุท: ุฅูุบุงุก ุงูุชูุงุตูู ูุงูุงุนุชู…ุงุฏ ุนูู ุงูุดู…ูููุฉ.");
-            }
-            if (text.includes("ูุงุฌุจ") || text.includes("ู…ูุฏุณ")) {
-                score += 30;
-                findings.push("ูุฏุงุก ุณูุทูู: ู…ุญุงููุฉ ุฅุถูุงุก ุทุงุจุน ุฃุฎูุงูู ุนูู ุงูุฑุฃู.");
-            }
-
-            // ุชุญุฏูุซ ุงููุงุฌูุฉ
-            scoreElement.innerText = score + "%";
-            scoreElement.className = score > 50 ? "text-5xl font-black text-red-600" : "text-5xl font-black text-green-600";
+        }
+    </script>
+</body>
+</html>
