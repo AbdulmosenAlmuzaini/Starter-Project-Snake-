@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل البروباجندا الذكي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; }
+        .analyzer-card { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="p-5 md:p-10">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">🔍 محلل النصوص المضللة</h1>
+            <p class="text-slate-600">اكتشف أساليب التلاعب اللغوي والدعاية في النصوص</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
+                <label class="block text-lg font-bold mb-3 text-slate-700">أدخل النص المراد تحليله:</label>
+                <textarea id="inputText" rows="8" class="w-full p-4 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none resize-none" placeholder="اكتب أو الصق النص هنا..."></textarea>
+                
+                <button onclick="analyzeText()" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200">
+                    بدء التحليل الفوري
+                </button>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center flex flex-col justify-center border-t-4 border-blue-500">
+                <h3 class="text-xl font-bold mb-2">مؤشر التضليل</h3>
+                <div id="scoreCircle" class="text-5xl font-black text-slate-300">0%</div>
+                <p id="statusText" class="mt-4 text-slate-500 italic">بانتظار النص...</p>
+            </div>
+
+        </div>
+
+        <div id="resultsDetail" class="hidden mt-8 bg-white p-6 rounded-2xl shadow-lg border-r-8 border-yellow-400">
+            <h3 class="text-xl font-bold mb-4 text-slate-800 underline decoration-yellow-400">التقنيات المكتشفة:</h3>
+            <ul id="techList" class="space-y-3">
+                </ul>
+        </div>
+    </div>
+
+    <script>
+        function analyzeText() {
+            const text = document.getElementById('inputText').value;
+            const scoreElement = document.getElementById('scoreCircle');
+            const statusElement = document.getElementById('statusText');
+            const detailBox = document.getElementById('resultsDetail');
+            const list = document.getElementById('techList');
+
+            if (!text.trim()) return alert("الرجاء إدخال نص أولاً");
+
+            // محاكاة بسيطة لمنطق التحليل (Regex)
+            let score = 0;
+            let findings = [];
+            
+            if (text.includes("مؤامرة") || text.includes("خيانة")) {
+                score += 40;
+                findings.push("تحفيز عاطفي: استخدام كلمات مشحونة.");
+            }
+            if (text.includes("كل") || text.includes("دائماً") || text.includes("الجميع")) {
+                score += 30;
+                findings.push("تعميم مفرط: إلغاء التفاصيل والاعتماد على الشمولية.");
+            }
+            if (text.includes("واجب") || text.includes("مقدس")) {
+                score += 30;
+                findings.push("نداء سلطوي: محاولة إضفاء طابع أخلاقي على الرأي.");
+            }
+
+            // تحديث الواجهة
+            scoreElement.innerText = score + "%";
+            scoreElement.className = score > 50 ? "text-5xl font-black text-red-600" : "text-5xl font-black text-green-600";
+            statusElement.innerText = score > 50 ? "احتمالية تضليل عالية!" : "النص يبدو موضوعياً غالباً.";
+            
+            list.innerHTML = "";
+            findings.forEach(f => {
+                list.innerHTML += `<li class="flex items-center text-slate-700 bg-slate-50 p-3 rounded-lg"> 🚩 ${f}</li>`;
+            });
+
+            detailBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل البروباجندا الذكي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; }
+        .analyzer-card { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="p-5 md:p-10">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-slate-800 mb-2">🔍 محلل النصوص المضللة</h1>
+            <p class="text-slate-600">اكتشف أساليب التلاعب اللغوي والدعاية في النصوص</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-lg">
+                <label class="block text-lg font-bold mb-3 text-slate-700">أدخل النص المراد تحليله:</label>
+                <textarea id="inputText" rows="8" class="w-full p-4 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:outline-none resize-none" placeholder="اكتب أو الصق النص هنا..."></textarea>
+                
+                <button onclick="analyzeText()" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition duration-200">
+                    بدء التحليل الفوري
+                </button>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center flex flex-col justify-center border-t-4 border-blue-500">
+                <h3 class="text-xl font-bold mb-2">مؤشر التضليل</h3>
+                <div id="scoreCircle" class="text-5xl font-black text-slate-300">0%</div>
+                <p id="statusText" class="mt-4 text-slate-500 italic">بانتظار النص...</p>
+            </div>
+
+        </div>
+
+        <div id="resultsDetail" class="hidden mt-8 bg-white p-6 rounded-2xl shadow-lg border-r-8 border-yellow-400">
+            <h3 class="text-xl font-bold mb-4 text-slate-800 underline decoration-yellow-400">التقنيات المكتشفة:</h3>
+            <ul id="techList" class="space-y-3">
+                </ul>
+        </div>
+    </div>
+
+    <script>
+        function analyzeText() {
+            const text = document.getElementById('inputText').value;
+            const scoreElement = document.getElementById('scoreCircle');
+            const statusElement = document.getElementById('statusText');
+            const detailBox = document.getElementById('resultsDetail');
+            const list = document.getElementById('techList');
+
+            if (!text.trim()) return alert("الرجاء إدخال نص أولاً");
+
+            // محاكاة بسيطة لمنطق التحليل (Regex)
+            let score = 0;
+            let findings = [];
+            
+            if (text.includes("مؤامرة") || text.includes("خيانة")) {
+                score += 40;
+                findings.push("تحفيز عاطفي: استخدام كلمات مشحونة.");
+            }
+            if (text.includes("كل") || text.includes("دائماً") || text.includes("الجميع")) {
+                score += 30;
+                findings.push("تعميم مفرط: إلغاء التفاصيل والاعتماد على الشمولية.");
+            }
+            if (text.includes("واجب") || text.includes("مقدس")) {
+                score += 30;
+                findings.push("نداء سلطوي: محاولة إضفاء طابع أخلاقي على الرأي.");
+            }
+
+            // تحديث الواجهة
+            scoreElement.innerText = score + "%";
+            scoreElement.className = score > 50 ? "text-5xl font-black text-red-600" : "text-5xl font-black text-green-600";
+            statusElement.innerText = score > 50 ? "احتمالية تضليل عالية!" : "النص يبدو موضوعياً غالباً.";
+            
+            list.innerHTML = "";
+            findings.forEach(f => {
+                list.innerHTML += `<li class="flex items-center text-slate-700 bg-slate-50 p-3 rounded-lg"> 🚩 ${f}</li>`;
+            });
+
+            detailBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
